@@ -38,7 +38,8 @@ def init_output_file():
 
 def download_file(url):
     """
-    Downloads a file from the remote URL, and return a dictionary containing timing metrics around the request
+    Downloads a file from the remote URL, and return a dictionary containing timing metrics around the request.
+    A random 2 to 5 seconds delay is added in after the request.
     
     Arguments:
         url - URL string to the remote resource
@@ -74,7 +75,7 @@ def write_out_results(file_name, method, trial, result):
 
 def download_and_write(file_name, source, method, iterations):
     """
-    Starts the test for a file.
+    Starts the test for a single file.
 
     Arguments:
         file_name - An identifier of the file requested
@@ -95,6 +96,16 @@ if __name__ == "__main__":
     for filename in test_files:
         file = test_files[filename]
         print(f"Testing downloads of {filename}")
+
+        """
+        If the file we are testing corresponds to a structure, download it 5 times
+        through the ftp-over-http site, the AWS cloudfront distribution, and through
+        the download shortlink from the FTP server.
+
+        In order to test the performance of larger files, we are also downloading
+        reference information from the ftp-over-http site and the AWS cloudfront distribution.
+        In those cases, we are downloading those files only 2 times.
+        """
         if "download" in file.keys():
             download_and_write(filename, legacy_http_source, "http", 5)
             download_and_write(filename, cloud_http_source, "http", 5)

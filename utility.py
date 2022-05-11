@@ -2,8 +2,8 @@
 
 import time, urllib.request, random
 
-legacy_download_source="https://files.rcsb.org/download"
-legacy_http_source="https://files.rcsb.org/pub/pdb"
+files_download_source="https://files.rcsb.org/download"
+files_http_source="https://files.rcsb.org/pub/pdb"
 cloud_http_source="https://s3.rcsb.org/pub/pdb"
 
 test_files = {
@@ -47,7 +47,7 @@ def download_file(url):
     Returns:
         A dictionary object with the start and end time (in fractional seconds) of the request, along with the original url requested.
     """
-    starttime = time.perf_counter()    
+    starttime = time.perf_counter()
     response = urllib.request.urlopen(url)
     response.read()
     endtime = time.perf_counter()
@@ -83,8 +83,8 @@ def download_and_write(file_name, source, method, iterations):
         method - An identifier from which location the file was requested (either 'http' or 'download')
         iterations - The number of times to download the file
     """
-    print(f"Downloading from {source}")
     for i in range(iterations):
+        print(f"Downloading from {source} - trial number {i}")
         url = f"{source}/{file[method]}"
         result = download_file(url)
         write_out_results(file_name, method, i, result)
@@ -98,18 +98,18 @@ if __name__ == "__main__":
         print(f"Testing downloads of {filename}")
 
         """
-        If the file we are testing corresponds to a structure, download it 5 times
+        If the file we are testing corresponds to a structure, download it multiple times
         through the ftp-over-http site, the AWS cloudfront distribution, and through
         the download shortlink from the FTP server.
 
         In order to test the performance of larger files, we are also downloading
         reference information from the ftp-over-http site and the AWS cloudfront distribution.
-        In those cases, we are downloading those files only 2 times.
+        In those cases, we are downloading those files only a few times.
         """
         if "download" in file.keys():
-            download_and_write(filename, legacy_http_source, "http", 5)
-            download_and_write(filename, cloud_http_source, "http", 5)
-            download_and_write(filename, legacy_download_source, "download", 5)
+            download_and_write(filename, files_http_source, "http", 15)
+            download_and_write(filename, cloud_http_source, "http", 15)
+            download_and_write(filename, files_download_source, "download", 15)
         else:
-            download_and_write(filename, legacy_http_source, "http", 2)
-            download_and_write(filename, cloud_http_source, "http", 2)
+            download_and_write(filename, files_http_source, "http", 3)
+            download_and_write(filename, cloud_http_source, "http", 3)

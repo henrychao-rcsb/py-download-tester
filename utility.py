@@ -19,19 +19,23 @@ test_files = {
         "http": "data/biounit/coordinates/divided/d8/1d8w.pdb1.gz",
         "download": "1d8w.pdb1.gz",
     },
-    "ls-lR": { #399 MB
-        "http": "ls-lR",
+    "3j3y": { #42 MB
+        "http": "data/structures/divided/mmCIF/j3/3j3y.cif.gz",
+        "download": "3j3y.cif.gz",
     },
-    "current_file_holdings": { # 11 MB
-        "http":  "holdings/current_file_holdings.json.gz",
-    }
+    "1m4x-assembly": { # 376 MB
+        "http":  "data/assemblies/mmCIF/divided/m4/1m4x-assembly1.cif.gz",
+    },
+    "r5s74sf": { # 3 GB
+        "http":  "data/structures/divided/structure_factors/s7/r5s74sf.ent.gz",
+    },
 }
 
 output_file = "results.csv"
 
 def init_output_file():
     """
-    Initializes the output file to store the results of the tests
+    Initializes the output file to store the results of the tests. Overwrites any existing output file in the directory.
     """
     with open(output_file, 'w') as outfile:
         outfile.write("FILENAME,METHOD,TRIAL,URL,START TIME (sec),END TIME (sec),TOTAL TIME (sec)\n")
@@ -111,5 +115,5 @@ if __name__ == "__main__":
             download_and_write(filename, cloud_http_source, "http", 15)
             download_and_write(filename, files_download_source, "download", 15)
         else:
-            download_and_write(filename, files_http_source, "http", 3)
-            download_and_write(filename, cloud_http_source, "http", 3)
+            download_and_write(filename, files_http_source, "http", 5)
+            download_and_write(filename, cloud_http_source, "http", 5)
